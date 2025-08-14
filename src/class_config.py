@@ -1,4 +1,5 @@
 class Product:
+    """ Класс для определения продуктов, их названия, описания, цены и остатков"""
 
     name = str
     description = str
@@ -15,6 +16,8 @@ class Product:
 
 
 class Category:
+    """Класс категорий товаров, включающий название, описание, и список самих продуктов """
+
     name = str
     description = str
     products = list
@@ -22,11 +25,10 @@ class Category:
     category_count = 0
     product_count = 0
 
-
     def __init__(self, name, description, products):
         self.name = name
         self.description = description
         self.products = products
 
-        Category.category_count +=1
+        Category.category_count += 1
         Category.product_count += len(products)
