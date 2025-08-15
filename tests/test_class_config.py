@@ -25,6 +25,8 @@ def test_product_initialization(sample_product):
     assert isinstance(sample_product.price, float)
     assert isinstance(sample_product.quantity, int)
 
+    # Проверяем счётчик
+    assert Product.product_count == 0
 
 # Тест инициализации нескольких продуктов
 def test_product_multiple_initialization():
@@ -43,6 +45,9 @@ def test_product_multiple_initialization():
     assert product2.price == 29.99
     assert product2.quantity == 3
 
+    # Проверяем счётчик
+    assert Product.product_count == 0
+
 
 # Тест инициализации класса Category
 def test_category_initialization(sample_category, product_list):
@@ -58,6 +63,9 @@ def test_category_initialization(sample_category, product_list):
     assert isinstance(sample_category.products, list)
     assert all(isinstance(product, Product) for product in sample_category.products)
 
+    # Проверяем счётчики
+    assert Category.category_count == 1
+    assert Category.product_count == 3
 
 # Тест инициализации пустой категории
 def test_empty_category_initialization(empty_category):
