@@ -1,5 +1,5 @@
 class Product:
-    """ Класс для определения продуктов, их названия, описания, цены и остатков"""
+    """Класс для определения продуктов, их названия, описания, цены и остатков"""
 
     name = str
     description = str
@@ -25,12 +25,7 @@ class Product:
         if not all(key in product_data for key in required_keys):
             raise ValueError("В словаре должны быть ключи: name, description, price, quantity")
 
-        return cls(
-            product_data["name"],
-            product_data["description"],
-            product_data["price"],
-            product_data["quantity"]
-        )
+        return cls(product_data["name"], product_data["description"], product_data["price"], product_data["quantity"])
 
     @property
     def price(self):
@@ -59,7 +54,9 @@ class Category:
     def __init__(self, name, description, products=None):
         self.name = name
         self.description = description
-        self.__products = products if products is not None else []  # Инициализация пустым списком, если products не передан
+        self.__products = (
+            products if products is not None else []
+        )  # Инициализация пустым списком, если products не передан
 
         Category.category_count += 1
         Category.product_count += len(self.__products)
@@ -77,5 +74,6 @@ class Category:
         """Геттер для вывода списка товаров в формате: Название продукта, цена руб. Остаток: количество шт."""
         if not self.__products:
             return "Список товаров пуст"
-        return "\n".join(f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт."
-                         for product in self.__products)
+        return "\n".join(
+            f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт." for product in self.__products
+        )

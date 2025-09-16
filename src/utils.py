@@ -5,8 +5,8 @@ from src.class_config import Product, Category
 
 
 def read_data_from_json(path: str = "../data/products.json") -> dict:
-    """ Функция для чтения данных из json-файла.
-     Если адрес не указан, что функция принимает адрес по умолчанию ../data/products.json"""
+    """Функция для чтения данных из json-файла.
+    Если адрес не указан, что функция принимает адрес по умолчанию ../data/products.json"""
 
     full_path = os.path.abspath(path)
     with open(full_path, "r", encoding="utf-8") as file:
@@ -18,7 +18,7 @@ def read_data_from_json(path: str = "../data/products.json") -> dict:
 
 
 def greate_object_from_json(data):
-    """ Функция для создания объектов класса из данных json-файла"""
+    """Функция для создания объектов класса из данных json-файла"""
 
     categories = []
     for category in data:
