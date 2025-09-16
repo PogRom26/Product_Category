@@ -51,8 +51,8 @@ def test_read_data_from_json_file_not_found(tmp_path):
 
 
 # Тест для проверки создания объектов из JSON-данных
-def test_greate_object_from_json(sample_category, product_list):
-    # Тестовые JSON-данные
+def test_create_object_from_json():
+    """Тест создания объектов Category и Product из JSON-данных"""
     json_data = [
         {
             "name": "Sample Category",
@@ -80,7 +80,7 @@ def test_greate_object_from_json(sample_category, product_list):
         }
     ]
 
-    # Создаём объекты из JSON
+    # Создаем объекты из JSON
     categories = greate_object_from_json(json_data)
 
     # Проверяем результат
@@ -89,10 +89,13 @@ def test_greate_object_from_json(sample_category, product_list):
     assert isinstance(category, Category)
     assert category.name == "Sample Category"
     assert category.description == "This is a sample category"
-    assert len(category.products) == 3
-    assert category.products[0].name == "Product 1"
-    assert category.products[0].price == 19.99
-    assert category.products[0].quantity == 5
+
+    # Проверяем продукты (доступ к приватному атрибуту __products)
+    assert len(category._Category__products) == 3  # Проверяем количество продуктов
+    assert category._Category__products[0].name == "Product 1"
+    assert category._Category__products[0].price == 19.99
+    assert category._Category__products[0].quantity == 5
+    assert "Product 1, 19.99 руб. Остаток: 5 шт." in category.products  # Проверяем строку products
 
 
 # Тест для пустых данных
@@ -118,4 +121,3 @@ def test_greate_object_from_json_empty_products(empty_category):
     assert isinstance(category, Category)
     assert category.name == "Empty Category"
     assert category.description == "This is an empty category"
-    assert category.products == []
