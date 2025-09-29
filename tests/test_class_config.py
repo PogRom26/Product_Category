@@ -157,12 +157,7 @@ class TestProductStr:
 
     def test_str_with_class_method(self):
         """Тест строкового представления для продукта созданного через classmethod"""
-        product_data = {
-            "name": "Монитор",
-            "description": "Игровой монитор",
-            "price": 25000.0,
-            "quantity": 8
-        }
+        product_data = {"name": "Монитор", "description": "Игровой монитор", "price": 25000.0, "quantity": 8}
         product = Product.new_product(product_data)
         expected = "Монитор, 25000.0 руб. Остаток: 8 шт."
         assert str(product) == expected
@@ -177,7 +172,6 @@ class TestProductStr:
         assert f"{product.price} руб." in result
         assert f"Остаток: {product.quantity} шт." in result
         assert ", " in result  # разделитель между названием и ценой
-
 
 
 class TestProductAddition:
