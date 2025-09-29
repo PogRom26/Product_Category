@@ -15,6 +15,20 @@ class Product:
         self.quantity = quantity
         Product.product_count += 1
 
+    def __str__(self):
+        """Строковое представление продукта в формате: Название продукта, 80 руб. Остаток: 15 шт."""
+        return f"{self.name}, {self.__price} руб. Остаток: {self.quantity} шт."
+
+    def __add__(self, other):
+        """
+        Сложение двух продуктов.
+        Результат - общая стоимость всех товаров на складе.
+        """
+        if not isinstance(other, Product):
+            raise TypeError("Можно складывать только объекты класса Product")
+
+        return (self.__price * self.quantity) + (other.__price * other.quantity)
+
     @classmethod
     def new_product(cls, product_data):
         """Класс-метод для создания объекта Product из словаря с параметрами"""
@@ -68,6 +82,10 @@ class Category:
             Category.product_count += 1
         else:
             raise ValueError("Добавляемый объект должен быть экземпляром класса Product")
+
+    def __str__(self):
+        """Строковое представление продукта в формате: Название категории, количество продуктов: 200 шт."""
+        return f"{self.name}, количество продуктов: {self.product_count} шт."
 
     @property
     def products(self):
