@@ -83,9 +83,11 @@ class Category:
         else:
             raise ValueError("Добавляемый объект должен быть экземпляром класса Product")
 
+
     def __str__(self):
-        """Строковое представление продукта в формате: Название категории, количество продуктов: 200 шт."""
-        return f"{self.name}, количество продуктов: {self.product_count} шт."
+        """Строковое представление категории в формате: Название категории, количество продуктов: X шт."""
+        total_quantity = sum(product.quantity for product in self.__products)
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
 
     @property
     def products(self):
