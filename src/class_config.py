@@ -55,6 +55,41 @@ class Product:
             self.__price = value
 
 
+class Smartphone(Product):
+    """Класс для смартфонов, наследуется от Product"""
+
+    def __init__(self, name, description, price, quantity, efficiency, model, memory, color):
+        super().__init__(name, description, price, quantity)
+        self.efficiency = efficiency  # производительность
+        self.model = model  # модель
+        self.memory = memory  # объем встроенной памяти
+        self.color = color  # цвет
+
+    def __str__(self):
+        """Строковое представление смартфона с дополнительными атрибутами"""
+        base_str = super().__str__()
+        return (f"{base_str}\n"
+                f"Модель: {self.model}, Производительность: {self.efficiency}, "
+                f"Память: {self.memory} ГБ, Цвет: {self.color}")
+
+
+class LawnGrass(Product):
+    """Класс для газонной травы, наследуется от Product"""
+
+    def __init__(self, name, description, price, quantity, country, germination_period, color):
+        super().__init__(name, description, price, quantity)
+        self.country = country  # страна-производитель
+        self.germination_period = germination_period  # срок прорастания
+        self.color = color  # цвет
+
+    def __str__(self):
+        """Строковое представление газонной травы с дополнительными атрибутами"""
+        base_str = super().__str__()
+        return (f"{base_str}\n"
+                f"Страна: {self.country}, Срок прорастания: {self.germination_period}, "
+                f"Цвет: {self.color}")
+
+
 class Category:
     """Класс категорий товаров, включающий название, описание, и список самих продуктов"""
 
