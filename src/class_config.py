@@ -23,9 +23,14 @@ class Product:
         """
         Сложение двух продуктов.
         Результат - общая стоимость всех товаров на складе.
+        Теперь можно складывать только товары из одинаковых классов.
         """
         if not isinstance(other, Product):
             raise TypeError("Можно складывать только объекты класса Product")
+
+        # Проверяем, что объекты одного типа
+        if type(self) != type(other):
+            raise TypeError("Нельзя складывать товары из разных классов продуктов")
 
         return (self.__price * self.quantity) + (other.__price * other.quantity)
 
@@ -112,11 +117,12 @@ class Category:
 
     def add_product(self, product):
         """Метод для добавления продукта в приватный список товаров"""
-        if isinstance(product, Product):  # Проверка, что передан объект класса Product
-            self.__products.append(product)
-            Category.product_count += 1
-        else:
-            raise ValueError("Добавляемый объект должен быть экземпляром класса Product")
+        # Проверяем, что передан объект класса Product или его наследников
+        if not isinstance(product, Product):
+            raise TypeError("Добавляемый объект должен быть экземпляром класса Product или его наследников")
+
+        self.__products.append(product)
+        Category.product_count += 1
 
 
     def __str__(self):
