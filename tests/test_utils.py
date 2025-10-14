@@ -1,7 +1,9 @@
-import pytest
 import json
-from src.utils import read_data_from_json, greate_object_from_json
+
+import pytest
+
 from src.class_config import Category
+from src.utils import greate_object_from_json, read_data_from_json
 
 
 # Тест для функции read_data_from_json

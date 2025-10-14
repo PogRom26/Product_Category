@@ -1,7 +1,7 @@
-import os
 import json
+import os
 
-from src.class_config import Product, Category
+from src.class_config import Category, Product
 
 
 def read_data_from_json(path: str = "../data/products.json") -> dict:

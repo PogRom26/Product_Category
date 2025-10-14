@@ -1,5 +1,6 @@
 import pytest
-from src.class_config import Product, Category
+
+from src.class_config import Category, Product
 
 
 # Фикстура для одного продукта

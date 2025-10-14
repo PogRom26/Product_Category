@@ -73,9 +73,11 @@ class Smartphone(Product):
     def __str__(self):
         """Строковое представление смартфона с дополнительными атрибутами"""
         base_str = super().__str__()
-        return (f"{base_str}\n"
-                f"Модель: {self.model}, Производительность: {self.efficiency}, "
-                f"Память: {self.memory} ГБ, Цвет: {self.color}")
+        return (
+            f"{base_str}\n"
+            f"Модель: {self.model}, Производительность: {self.efficiency}, "
+            f"Память: {self.memory} ГБ, Цвет: {self.color}"
+        )
 
 
 class LawnGrass(Product):
@@ -90,9 +92,11 @@ class LawnGrass(Product):
     def __str__(self):
         """Строковое представление газонной травы с дополнительными атрибутами"""
         base_str = super().__str__()
-        return (f"{base_str}\n"
-                f"Страна: {self.country}, Срок прорастания: {self.germination_period}, "
-                f"Цвет: {self.color}")
+        return (
+            f"{base_str}\n"
+            f"Страна: {self.country}, Срок прорастания: {self.germination_period}, "
+            f"Цвет: {self.color}"
+        )
 
 
 class Category:
@@ -123,7 +127,6 @@ class Category:
 
         self.__products.append(product)
         Category.product_count += 1
-
 
     def __str__(self):
         """Строковое представление категории в формате: Название категории, количество продуктов: X шт."""
