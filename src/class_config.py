@@ -20,16 +20,10 @@ class Product:
         return f"{self.name}, {self.__price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other):
-        """
-        Сложение двух продуктов.
-        Результат - общая стоимость всех товаров на складе.
-        Теперь можно складывать только товары из одинаковых классов.
-        """
         if not isinstance(other, Product):
             raise TypeError("Можно складывать только объекты класса Product")
 
-        # Проверяем, что объекты одного типа
-        if type(self) != type(other):
+        if not isinstance(other, type(self)):
             raise TypeError("Нельзя складывать товары из разных классов продуктов")
 
         return (self.__price * self.quantity) + (other.__price * other.quantity)
