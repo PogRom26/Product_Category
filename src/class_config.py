@@ -1,6 +1,59 @@
 from abc import ABC, abstractmethod
 
 
+class ReprMixin:
+    """Миксин для логирования создания объектов и улучшенного строкового представления"""
+
+    def __init__(self, *args, **kwargs):
+        """Логирует создание объекта с параметрами"""
+        # Получаем имя класса
+        class_name = self.__class__.__name__
+
+        # Формируем строку с параметрами
+        params = []
+
+        # Добавляем позиционные аргументы
+        if args:
+            params.extend(repr(arg) for arg in args)
+
+        # Добавляем именованные аргументы (кроме тех, что уже были в args)
+        init_signature = self.__class__.__init__.__code__
+        param_names = init_signature.co_varnames[1:init_signature.co_argcount]  # исключаем self
+
+        for i, arg in enumerate(args):
+            if i < len(param_names):
+                param_name = param_names[i]
+                if param_name not in kwargs:  # если этот параметр не передан как keyword
+                    params.append(f"{param_name}={repr(arg)}")
+
+        # Добавляем keyword аргументы
+        for key, value in kwargs.items():
+            params.append(f"{key}={repr(value)}")
+
+        param_str = ", ".join(params)
+        print(f"{class_name}({param_str})")
+
+        # Вызываем следующий конструктор в цепочке MRO
+        super().__init__(*args, **kwargs)
+
+    def __repr__(self):
+        """Улучшенное строковое представление для отладки"""
+        class_name = self.__class__.__name__
+
+        # Собираем атрибуты для repr
+        attrs = []
+        for attr_name in dir(self):
+            if not attr_name.startswith('_') and not callable(getattr(self, attr_name)):
+                try:
+                    attr_value = getattr(self, attr_name)
+                    attrs.append(f"{attr_name}={repr(attr_value)}")
+                except (AttributeError, Exception):
+                    continue
+
+        attr_str = ", ".join(attrs)
+        return f"{class_name}({attr_str})"
+
+
 class BaseProduct(ABC):
     """Абстрактный базовый класс для всех продуктов"""
 
@@ -34,12 +87,15 @@ class BaseProduct(ABC):
         pass
 
 
-class Product(BaseProduct):
+class Product(ReprMixin, BaseProduct):
     """Класс для определения продуктов, их названия, описания, цены и остатков"""
 
     product_count = 0
 
     def __init__(self, name, description, price, quantity):
+        # ReprMixin.__init__ будет вызван первым благодаря MRO
+        # Он выведет информацию о создании и вызовет super().__init__()
+        # который вызовет BaseProduct.__init__
         super().__init__(name, description, price, quantity)
         Product.product_count += 1
 
@@ -86,6 +142,7 @@ class Smartphone(Product):
     """Класс для смартфонов, наследуется от Product"""
 
     def __init__(self, name, description, price, quantity, efficiency, model, memory, color):
+        # Вызываем конструктор родительского класса
         super().__init__(name, description, price, quantity)
         self.efficiency = efficiency  # производительность
         self.model = model  # модель
@@ -106,6 +163,7 @@ class LawnGrass(Product):
     """Класс для газонной травы, наследуется от Product"""
 
     def __init__(self, name, description, price, quantity, country, germination_period, color):
+        # Вызываем конструктор родительского класса
         super().__init__(name, description, price, quantity)
         self.country = country  # страна-производитель
         self.germination_period = germination_period  # срок прорастания
@@ -163,3 +221,4 @@ class Category:
         return "\n".join(
             f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт." for product in self.__products
         )
+
