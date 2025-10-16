@@ -1,23 +1,51 @@
-class Product:
-    """Класс для определения продуктов, их названия, описания, цены и остатков"""
+from abc import ABC, abstractmethod
 
-    name = str
-    description = str
-    __price = float  # Приватный атрибут цены
-    quantity = int
+
+class BaseProduct(ABC):
+    """Абстрактный базовый класс для всех продуктов"""
+
+    @abstractmethod
+    def __init__(self, name, description, price, quantity):
+        self.name = name
+        self.description = description
+        self._price = price if price > 0 else 0
+        self.quantity = quantity
+
+    @abstractmethod
+    def __str__(self):
+        """Абстрактный метод для строкового представления продукта"""
+        pass
+
+    @abstractmethod
+    def __add__(self, other):
+        """Абстрактный метод для сложения продуктов"""
+        pass
+
+    @property
+    @abstractmethod
+    def price(self):
+        """Абстрактный геттер для цены"""
+        pass
+
+    @price.setter
+    @abstractmethod
+    def price(self, value):
+        """Абстрактный сеттер для цены"""
+        pass
+
+
+class Product(BaseProduct):
+    """Класс для определения продуктов, их названия, описания, цены и остатков"""
 
     product_count = 0
 
     def __init__(self, name, description, price, quantity):
-        self.name = name
-        self.description = description
-        self.__price = price if price > 0 else 0  # Инициализация с проверкой
-        self.quantity = quantity
+        super().__init__(name, description, price, quantity)
         Product.product_count += 1
 
     def __str__(self):
         """Строковое представление продукта в формате: Название продукта, 80 руб. Остаток: 15 шт."""
-        return f"{self.name}, {self.__price} руб. Остаток: {self.quantity} шт."
+        return f"{self.name}, {self._price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other):
         if not isinstance(other, Product):
@@ -26,7 +54,7 @@ class Product:
         if not isinstance(other, type(self)):
             raise TypeError("Нельзя складывать товары из разных классов продуктов")
 
-        return (self.__price * self.quantity) + (other.__price * other.quantity)
+        return (self._price * self.quantity) + (other._price * other.quantity)
 
     @classmethod
     def new_product(cls, product_data):
@@ -43,7 +71,7 @@ class Product:
     @property
     def price(self):
         """Геттер для получения цены"""
-        return self.__price
+        return self._price
 
     @price.setter
     def price(self, value):
@@ -51,7 +79,7 @@ class Product:
         if value <= 0:
             print("Цена не должна быть нулевая или отрицательная")
         else:
-            self.__price = value
+            self._price = value
 
 
 class Smartphone(Product):
