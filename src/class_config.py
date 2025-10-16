@@ -18,7 +18,7 @@ class ReprMixin:
 
         # Добавляем именованные аргументы (кроме тех, что уже были в args)
         init_signature = self.__class__.__init__.__code__
-        param_names = init_signature.co_varnames[1:init_signature.co_argcount]  # исключаем self
+        param_names = init_signature.co_varnames[1: init_signature.co_argcount]  # исключаем self
 
         for i, arg in enumerate(args):
             if i < len(param_names):
@@ -43,7 +43,7 @@ class ReprMixin:
         # Собираем атрибуты для repr
         attrs = []
         for attr_name in dir(self):
-            if not attr_name.startswith('_') and not callable(getattr(self, attr_name)):
+            if not attr_name.startswith("_") and not callable(getattr(self, attr_name)):
                 try:
                     attr_value = getattr(self, attr_name)
                     attrs.append(f"{attr_name}={repr(attr_value)}")
@@ -221,4 +221,3 @@ class Category:
         return "\n".join(
             f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт." for product in self.__products
         )
-

@@ -2,7 +2,8 @@ from abc import ABC
 
 import pytest
 
-from src.class_config import Category, LawnGrass, Product, Smartphone, BaseProduct, ReprMixin
+from src.class_config import (BaseProduct, Category, LawnGrass, Product,
+                              ReprMixin, Smartphone)
 
 
 # Tests for Product class
