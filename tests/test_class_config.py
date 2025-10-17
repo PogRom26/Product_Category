@@ -100,12 +100,6 @@ class TestProductStr:
         expected = "Телефон, 50000.0 руб. Остаток: 10 шт."
         assert str(product) == expected
 
-    def test_str_representation_zero_quantity(self):
-        """Тест с нулевым количеством"""
-        product = Product("Ноутбук", "Игровой ноутбук", 100000.0, 0)
-        expected = "Ноутбук, 100000.0 руб. Остаток: 0 шт."
-        assert str(product) == expected
-
     def test_str_representation_large_quantity(self):
         """Тест с большим количеством"""
         product = Product("Книга", "Программирование на Python", 1500.0, 1000)
@@ -186,31 +180,6 @@ class TestProductAddition:
         # Assert
         expected = (100 * 10) + (200 * 2)  # 1000 + 400 = 1400
         assert result == expected
-
-    def test_add_two_products_with_zero_quantity(self):
-        """Тест сложения продуктов, когда у одного количество равно 0"""
-        # Arrange
-        product1 = Product("Книга", "Художественная литература", 500, 0)
-        product2 = Product("Ручка", "Шариковая ручка", 50, 5)
-
-        # Act
-        result = product1 + product2
-
-        # Assert
-        expected = (500 * 0) + (50 * 5)  # 0 + 250 = 250
-        assert result == expected
-
-    def test_add_two_products_both_zero_quantity(self):
-        """Тест сложения продуктов, когда у обоих количество равно 0"""
-        # Arrange
-        product1 = Product("Товар1", "Описание1", 100, 0)
-        product2 = Product("Товар2", "Описание2", 200, 0)
-
-        # Act
-        result = product1 + product2
-
-        # Assert
-        assert result == 0
 
     def test_add_products_commutative_property(self):
         """Тест коммутативности сложения (a + b = b + a)"""
@@ -403,12 +372,6 @@ class TestProductAddition:
         assert result1 == result2
         assert result1 == (100.0 * 3) + (200.0 * 2)  # 300 + 400 = 700
 
-    def test_zero_quantity_products(self):
-        """Тест сложения продуктов с нулевым количеством"""
-        product1 = Product("Товар1", "Описание", 100.0, 0)
-        product2 = Product("Товар2", "Описание", 50.0, 0)
-        result = product1 + product2
-        assert result == 0
 
     def test_mixed_quantities(self):
         """Тест сложения продуктов с разными количествами"""
@@ -798,16 +761,6 @@ class TestCategoryAddProduct:
         assert category.products != "Список товаров пуст"
         assert "Первый товар" in category.products
 
-    def test_add_product_with_zero_quantity(self):
-        """Тест добавления продукта с нулевым количеством"""
-        category = Category("Тест", "Описание")
-        product = Product("Товар с нулевым остатком", "Описание", 50.0, 0)
-
-        category.add_product(product)
-
-        # Проверяем, что продукт добавлен (количество 0 допустимо)
-        assert "Товар с нулевым остатком" in category.products
-        assert "0 шт." in category.products
 
     def test_product_order_preservation(self):
         """Тест сохранения порядка добавления продуктов"""
@@ -1216,3 +1169,194 @@ class TestBackwardCompatibility:
 
         # Строковое представление
         assert "Test Category, количество продуктов: 5 шт." in str(category)
+
+
+import pytest
+
+
+class TestProductCreation:
+    """Тесты для создания продуктов с нулевым количеством"""
+
+    def test_create_product_with_zero_quantity_raises_error(self):
+        """Тест: создание продукта с quantity=0 вызывает ValueError"""
+        with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+            Product("Телефон", "Хороший телефон", 10000, 0)
+
+    def test_create_smartphone_with_zero_quantity_raises_error(self):
+        """Тест: создание смартфона с quantity=0 вызывает ValueError"""
+        with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+            Smartphone("iPhone", "Смартфон", 50000, 0, "Высокая", "15 Pro", 256, "Black")
+
+    def test_create_lawn_grass_with_zero_quantity_raises_error(self):
+        """Тест: создание газонной травы с quantity=0 вызывает ValueError"""
+        with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+            LawnGrass("Трава", "Газонная", 500, 0, "Россия", "30 дней", "Зеленый")
+
+    def test_create_product_with_positive_quantity_success(self):
+        """Тест: создание продукта с quantity>0 проходит успешно"""
+        product = Product("Телефон", "Хороший телефон", 10000, 1)
+        assert product.quantity == 1
+        assert product.name == "Телефон"
+
+    def test_new_product_method_with_zero_quantity_raises_error(self):
+        """Тест: метод new_product с quantity=0 вызывает ValueError"""
+        product_data = {
+            "name": "Телефон",
+            "description": "Хороший телефон",
+            "price": 10000,
+            "quantity": 0
+        }
+        with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+            Product.new_product(product_data)
+
+
+class TestCategoryMiddlePrice:
+    """Тесты для метода middle_price в классе Category"""
+
+    def test_middle_price_empty_category(self):
+        """Тест: средняя цена для пустой категории возвращает 0"""
+        category = Category("Пустая категория", "Нет товаров")
+        assert category.middle_price() == 0
+
+    def test_middle_price_single_product(self):
+        """Тест: средняя цена для категории с одним товаром"""
+        product = Product("Телефон", "Смартфон", 30000, 5)
+        category = Category("Электроника", "Техника", [product])
+        assert category.middle_price() == 30000
+
+    def test_middle_price_multiple_products(self):
+        """Тест: средняя цена для категории с несколькими товарами"""
+        product1 = Product("Телефон", "Смартфон", 30000, 5)
+        product2 = Product("Наушники", "Беспроводные", 5000, 10)
+        product3 = Product("Чехол", "Защитный", 1000, 20)
+
+        category = Category("Электроника", "Техника", [product1, product2, product3])
+
+        expected_average = (30000 + 5000 + 1000) / 3
+        assert category.middle_price() == expected_average
+
+    def test_middle_price_after_clearing_products(self):
+        """Тест: средняя цена после очистки списка товаров возвращает 0"""
+        product1 = Product("Телефон", "Смартфон", 30000, 5)
+        category = Category("Электроника", "Техника", [product1])
+
+        # Очищаем приватный список товаров
+        category._Category__products = []
+
+        assert category.middle_price() == 0
+
+    def test_middle_price_with_different_product_types(self):
+        """Тест: средняя цена с разными типами продуктов (наследниками Product)"""
+        smartphone = Smartphone("iPhone", "Смартфон", 50000, 5, "Высокая", "15 Pro", 256, "Black")
+        lawn_grass = LawnGrass("Трава", "Газонная", 500, 10, "Россия", "30 дней", "Зеленый")
+        product = Product("Чехол", "Защитный", 1000, 20)
+
+        category = Category("Разные товары", "Разные типы", [smartphone, lawn_grass, product])
+
+        expected_average = (50000 + 500 + 1000) / 3
+        assert category.middle_price() == expected_average
+
+
+class TestExistingFunctionality:
+    """Тесты для существующей функциональности (регрессионные тесты)"""
+
+    def test_product_creation_normal(self):
+        """Тест: обычное создание продукта работает корректно"""
+        product = Product("Телевизор", "4K", 50000, 3)
+        assert product.name == "Телевизор"
+        assert product.description == "4K"
+        assert product.price == 50000
+        assert product.quantity == 3
+
+    def test_product_str_representation(self):
+        """Тест: строковое представление продукта"""
+        product = Product("Телевизор", "4K", 50000, 3)
+        expected_str = "Телевизор, 50000 руб. Остаток: 3 шт."
+        assert str(product) == expected_str
+
+    def test_category_creation(self):
+        """Тест: создание категории"""
+        category = Category("Электроника", "Техника")
+        assert category.name == "Электроника"
+        assert category.description == "Техника"
+        assert category.products == "Список товаров пуст"
+
+    def test_category_add_product(self):
+        """Тест: добавление продукта в категорию"""
+        category = Category("Электроника", "Техника")
+        product = Product("Телевизор", "4K", 50000, 3)
+
+        category.add_product(product)
+
+        # Проверяем через свойство products
+        expected_products_str = "Телевизор, 50000 руб. Остаток: 3 шт."
+        assert category.products == expected_products_str
+
+    def test_category_str_representation(self):
+        """Тест: строковое представление категории"""
+        product1 = Product("Телевизор", "4K", 50000, 3)
+        product2 = Product("Наушники", "Беспроводные", 5000, 5)
+        category = Category("Электроника", "Техника", [product1, product2])
+
+        expected_str = "Электроника, количество продуктов: 8 шт."
+        assert str(category) == expected_str
+
+    def test_product_addition(self):
+        """Тест: сложение продуктов"""
+        product1 = Product("Телевизор", "4K", 50000, 2)
+        product2 = Product("Наушники", "Беспроводные", 5000, 3)
+
+        total_value = product1 + product2
+        expected_value = (50000 * 2) + (5000 * 3)
+        assert total_value == expected_value
+
+    def test_smartphone_creation(self):
+        """Тест: создание смартфона"""
+        smartphone = Smartphone("iPhone", "Смартфон", 50000, 5, "Высокая", "15 Pro", 256, "Black")
+        assert smartphone.name == "iPhone"
+        assert smartphone.model == "15 Pro"
+        assert smartphone.memory == 256
+        assert smartphone.quantity == 5
+
+    def test_lawn_grass_creation(self):
+        """Тест: создание газонной травы"""
+        lawn_grass = LawnGrass("Трава", "Газонная", 500, 10, "Россия", "30 дней", "Зеленый")
+        assert lawn_grass.name == "Трава"
+        assert lawn_grass.country == "Россия"
+        assert lawn_grass.germination_period == "30 дней"
+        assert lawn_grass.quantity == 10
+
+
+class TestEdgeCases:
+    """Тесты для граничных случаев"""
+
+    def test_middle_price_with_price_changes(self):
+        """Тест: средняя цена при изменении цен товаров"""
+        product1 = Product("Товар1", "Описание1", 10000, 1)
+        product2 = Product("Товар2", "Описание2", 20000, 1)
+        category = Category("Категория", "Описание", [product1, product2])
+
+        # Изначальная средняя цена
+        assert category.middle_price() == 15000
+
+        # Меняем цену одного товара
+        product1.price = 5000
+        assert category.middle_price() == 12500
+
+    def test_middle_price_very_low_prices(self):
+        """Тест: средняя цена с очень низкими ценами"""
+        product1 = Product("Товар1", "Описание1", 1, 1)
+        product2 = Product("Товар2", "Описание2", 2, 1)
+        category = Category("Категория", "Описание", [product1, product2])
+
+        assert category.middle_price() == 1.5
+
+    def test_middle_price_same_prices(self):
+        """Тест: средняя цена с одинаковыми ценами"""
+        product1 = Product("Товар1", "Описание1", 10000, 1)
+        product2 = Product("Товар2", "Описание2", 10000, 1)
+        product3 = Product("Товар3", "Описание3", 10000, 1)
+        category = Category("Категория", "Описание", [product1, product2, product3])
+
+        assert category.middle_price() == 10000
+

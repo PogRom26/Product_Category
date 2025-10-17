@@ -226,7 +226,6 @@ class Category:
             f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт." for product in self.__products
         )
 
-
     def middle_price(self):
         """Метод для подсчета среднего ценника всех товаров в категории"""
         try:
