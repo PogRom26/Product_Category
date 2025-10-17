@@ -59,6 +59,10 @@ class BaseProduct(ABC):
 
     @abstractmethod
     def __init__(self, name, description, price, quantity):
+        # Проверка на нулевое количество
+        if quantity == 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+
         self.name = name
         self.description = description
         self._price = price if price > 0 else 0
@@ -221,3 +225,15 @@ class Category:
         return "\n".join(
             f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт." for product in self.__products
         )
+
+
+    def middle_price(self):
+        """Метод для подсчета среднего ценника всех товаров в категории"""
+        try:
+            # Пытаемся вычислить среднюю цену
+            total_price = sum(product.price for product in self.__products)
+            return total_price / len(self.__products)
+
+        except ZeroDivisionError:
+            # Если товаров нет (деление на ноль), возвращаем 0
+            return 0
